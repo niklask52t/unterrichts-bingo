@@ -4,417 +4,351 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unterrichts-Bingo</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #06060e;
-  --surface: rgba(255,255,255,0.04);
-  --surface-hover: rgba(255,255,255,0.07);
-  --border: rgba(255,255,255,0.08);
-  --border-hover: rgba(255,255,255,0.15);
-  --text: #e8e8ed;
-  --text-muted: #6b6b80;
-  --purple: #a855f7;
-  --purple-glow: rgba(168, 85, 247, 0.25);
-  --teal: #06b6d4;
-  --teal-glow: rgba(6, 182, 212, 0.2);
-  --green: #10b981;
-  --amber: #f59e0b;
-  --red: #ef4444;
-  --radius: 16px;
-  --radius-sm: 10px;
-}
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+:root {
+  --bg: #0b0b14;
+  --surface: rgba(255,255,255,0.05);
+  --surface-hover: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.1);
+  --border-hover: rgba(255,255,255,0.2);
+  --text: #eee;
+  --text-dim: #888;
+  --green: #22c55e;
+  --green-glow: rgba(34, 197, 94, 0.25);
+  --green-bg: rgba(34, 197, 94, 0.15);
+  --purple: #a855f7;
+  --teal: #06b6d4;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --r: 12px;
+}
+
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  overflow-x: hidden;
 }
 
-/* ── Ambient background ─────────────────────────── */
 body::before {
   content: '';
   position: fixed;
-  top: -50%; left: -50%;
-  width: 200%; height: 200%;
+  inset: 0;
   background:
-    radial-gradient(ellipse at 20% 20%, rgba(168,85,247,0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(6,182,212,0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(245,158,11,0.03) 0%, transparent 40%);
-  animation: ambientDrift 20s ease-in-out infinite alternate;
-  z-index: 0;
+    radial-gradient(ellipse at 25% 15%, rgba(168,85,247,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 75% 85%, rgba(6,182,212,0.05) 0%, transparent 50%);
   pointer-events: none;
+  z-index: 0;
 }
 
-@keyframes ambientDrift {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  100% { transform: translate(-3%, 2%) rotate(3deg); }
-}
-
-/* ── Layout ─────────────────────────────────────── */
 .app {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 24px 16px;
+  padding: 20px 16px;
   min-height: 100vh;
 }
 
-/* ── Lobby ──────────────────────────────────────── */
+/* ── Lobby ──────────────────────────── */
+
 .lobby {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 80vh;
-  gap: 32px;
-  max-width: 480px;
+  min-height: 85vh;
+  gap: 24px;
+  max-width: 420px;
   width: 100%;
 }
 
-.lobby-title {
-  font-size: 3rem;
-  font-weight: 900;
-  letter-spacing: -0.03em;
+.logo {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.logo h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
   background: linear-gradient(135deg, var(--purple), var(--teal));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-align: center;
-  line-height: 1.1;
+  line-height: 1.15;
 }
 
-.lobby-sub {
-  color: var(--text-muted);
-  font-size: 1rem;
-  text-align: center;
-  margin-top: -16px;
+.logo p {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  margin-top: 6px;
 }
 
-.lobby-card {
+.card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px;
+  border-radius: var(--r);
+  padding: 24px;
   width: 100%;
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(12px);
 }
 
-.lobby-card h2 {
-  font-size: 1.1rem;
+.card h2 {
+  font-size: 0.95rem;
   font-weight: 700;
-  margin-bottom: 20px;
-  color: var(--text);
+  margin-bottom: 16px;
 }
 
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.input-field {
+.field {
   width: 100%;
-  padding: 14px 16px;
+  padding: 12px 14px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: 8px;
   background: rgba(0,0,0,0.3);
   color: var(--text);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-family: inherit;
   outline: none;
   transition: border-color 0.2s;
 }
 
-.input-field:focus {
+.field:focus {
   border-color: var(--purple);
-  box-shadow: 0 0 0 3px var(--purple-glow);
 }
 
-.input-field::placeholder { color: var(--text-muted); }
+.field::placeholder { color: #555; }
 
-.input-field.code-input {
+.field-code {
   text-align: center;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 800;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
 }
 
-.category-select {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 20px;
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
 }
 
-.cat-option {
-  padding: 10px 14px;
+.cats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.cat {
+  padding: 9px 10px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: 8px;
   background: transparent;
-  color: var(--text-muted);
+  color: var(--text-dim);
   font-family: inherit;
-  font-size: 0.82rem;
-  font-weight: 500;
+  font-size: 0.78rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s;
   text-align: center;
 }
 
-.cat-option:hover { border-color: var(--border-hover); color: var(--text); }
-.cat-option.active { border-color: var(--purple); color: var(--text); background: var(--purple-glow); }
-.cat-option[data-cat="si"].active { border-color: var(--teal); background: var(--teal-glow); }
-.cat-option[data-cat="wirtschaft"].active { border-color: var(--amber); background: rgba(245,158,11,0.12); }
+.cat:hover { border-color: var(--border-hover); color: var(--text); }
+.cat.on { border-color: var(--purple); color: #fff; background: rgba(168,85,247,0.15); }
+.cat.on[data-c="si"] { border-color: var(--teal); background: rgba(6,182,212,0.15); }
+.cat.on[data-c="wirtschaft"] { border-color: var(--amber); background: rgba(245,158,11,0.12); }
+.cat.on[data-c="allgemein"] { border-color: var(--red); background: rgba(239,68,68,0.12); }
 
 .btn {
   width: 100%;
-  padding: 14px;
+  padding: 12px;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: 8px;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.25s;
+  transition: all 0.2s;
 }
 
-.btn-primary {
+.btn-go {
   background: linear-gradient(135deg, var(--purple), var(--teal));
   color: #fff;
 }
 
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px var(--purple-glow);
+.btn-go:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(168,85,247,0.3);
 }
 
-.btn-secondary {
+.btn-dim {
   background: var(--surface);
   color: var(--text);
   border: 1px solid var(--border);
 }
 
-.btn-secondary:hover {
-  border-color: var(--border-hover);
-  background: var(--surface-hover);
-}
+.btn-dim:hover { border-color: var(--border-hover); }
 
-.divider {
+.sep {
   display: flex;
   align-items: center;
-  gap: 16px;
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  margin: 8px 0;
+  gap: 14px;
+  color: #555;
+  font-size: 0.75rem;
 }
 
-.divider::before, .divider::after {
+.sep::before, .sep::after {
   content: '';
   flex: 1;
   height: 1px;
   background: var(--border);
 }
 
-/* ── Game view ──────────────────────────────────── */
-.game { display: none; width: 100%; max-width: 640px; }
-.game.active { display: flex; flex-direction: column; align-items: center; }
+/* ── Game ───────────────────────────── */
 
-.game-header {
+.game { display: none; width: 100%; max-width: 580px; }
+.game.on { display: flex; flex-direction: column; align-items: center; }
+
+.top {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: 20px;
-  gap: 12px;
-  flex-wrap: wrap;
+  margin-bottom: 16px;
+  gap: 10px;
 }
 
-.room-badge {
+.room-info {
   display: flex;
   align-items: center;
   gap: 10px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 8px 16px;
-  backdrop-filter: blur(20px);
+  border-radius: 8px;
+  padding: 8px 14px;
 }
 
-.room-code {
-  font-size: 1.3rem;
+.room-info .label {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.room-info .code {
+  font-size: 1.15rem;
   font-weight: 800;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   background: linear-gradient(135deg, var(--purple), var(--teal));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.room-label {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 600;
+.room-info .cat-label {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  font-weight: 500;
 }
 
-.copy-btn {
+.copy {
   background: none;
   border: none;
-  color: var(--text-muted);
+  color: var(--text-dim);
   cursor: pointer;
-  padding: 4px;
-  font-size: 1rem;
-  transition: color 0.2s;
+  padding: 2px 6px;
+  font-size: 0.85rem;
+  transition: color 0.15s;
 }
-.copy-btn:hover { color: var(--text); }
+.copy:hover { color: var(--text); }
 
-.players-badge {
+.online {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 8px 14px;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  backdrop-filter: blur(20px);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.78rem;
+  color: var(--text-dim);
 }
 
-.player-dot {
-  width: 8px; height: 8px;
+.dot {
+  width: 7px; height: 7px;
   border-radius: 50%;
   background: var(--green);
-  box-shadow: 0 0 8px rgba(16,185,129,0.5);
-  animation: dotPulse 2s ease-in-out infinite;
+  box-shadow: 0 0 6px rgba(34,197,94,0.5);
 }
 
-@keyframes dotPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-.game-controls {
-  display: flex;
-  gap: 8px;
-  width: 100%;
+.leave-btn {
   margin-bottom: 16px;
-  flex-wrap: wrap;
+  align-self: stretch;
 }
 
-.game-controls .cat-option {
-  flex: 1;
-  min-width: 0;
-  padding: 8px 6px;
-  font-size: 0.72rem;
-}
+/* ── Grid ───────────────────────────── */
 
-.game-actions {
-  display: flex;
-  gap: 8px;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.game-actions .btn {
-  padding: 10px 16px;
-  font-size: 0.85rem;
-}
-
-/* ── Bingo Grid ─────────────────────────────────── */
 .grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 6px;
+  gap: 5px;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
-.cell {
+.c {
   aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 6px;
-  border-radius: var(--radius-sm);
-  font-size: 0.72rem;
+  padding: 5px;
+  border-radius: 8px;
+  font-size: 0.7rem;
   font-weight: 500;
-  line-height: 1.25;
+  line-height: 1.2;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s;
   border: 1px solid var(--border);
   background: var(--surface);
-  backdrop-filter: blur(20px);
   user-select: none;
   word-break: break-word;
   position: relative;
-  overflow: hidden;
 }
 
-.cell::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(135deg, transparent, rgba(255,255,255,0.03));
-  pointer-events: none;
-}
-
-.cell:hover {
+.c:hover {
   border-color: var(--border-hover);
-  transform: scale(1.04);
-  z-index: 2;
+  background: var(--surface-hover);
 }
 
-.cell:active { transform: scale(0.97); }
+.c:active { transform: scale(0.96); }
 
-.cell.marked {
-  background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(6,182,212,0.15));
-  border-color: var(--purple);
-  box-shadow: 0 0 20px var(--purple-glow), inset 0 0 20px rgba(168,85,247,0.05);
+.c.on {
+  background: var(--green-bg);
+  border-color: var(--green);
+  box-shadow: 0 0 16px var(--green-glow);
   color: #fff;
   font-weight: 600;
 }
 
-.cell.free {
-  background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(6,182,212,0.25));
-  border-color: rgba(168,85,247,0.4);
-  font-weight: 800;
-  font-size: 0.8rem;
-  cursor: default;
-  letter-spacing: 0.05em;
+.c.bingo {
+  animation: glow 0.8s ease-in-out infinite alternate;
 }
 
-.cell.bingo-cell {
-  animation: bingoGlow 0.8s ease-in-out infinite alternate;
-  border-color: var(--teal);
+@keyframes glow {
+  from { box-shadow: 0 0 12px var(--green-glow); }
+  to { box-shadow: 0 0 28px rgba(34,197,94,0.45), 0 0 50px var(--green-glow); }
 }
 
-@keyframes bingoGlow {
-  from {
-    box-shadow: 0 0 15px var(--purple-glow), inset 0 0 15px rgba(168,85,247,0.05);
-  }
-  to {
-    box-shadow: 0 0 35px var(--teal-glow), 0 0 60px var(--purple-glow),
-                inset 0 0 25px rgba(6,182,212,0.08);
-  }
-}
-
-.cell .marker-name {
+.c .who {
   position: absolute;
-  bottom: 2px;
-  right: 4px;
-  font-size: 0.5rem;
-  color: rgba(168,85,247,0.6);
+  bottom: 1px;
+  right: 3px;
+  font-size: 0.45rem;
+  color: rgba(34,197,94,0.6);
   font-weight: 700;
   max-width: 90%;
   overflow: hidden;
@@ -422,83 +356,92 @@ body::before {
   white-space: nowrap;
 }
 
-/* ── Bingo banner ───────────────────────────────── */
-.bingo-banner {
+/* ── Banner ─────────────────────────── */
+
+.banner {
   display: none;
-  font-size: 2.8rem;
+  font-size: 2.4rem;
   font-weight: 900;
-  letter-spacing: -0.02em;
-  background: linear-gradient(135deg, var(--purple), var(--teal), var(--amber));
+  background: linear-gradient(135deg, var(--green), var(--teal), var(--purple));
   background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: bannerShimmer 2s ease-in-out infinite;
-  margin-bottom: 16px;
+  animation: shimmer 1.5s ease-in-out infinite;
+  margin-bottom: 12px;
 }
 
-.bingo-banner.show { display: block; }
+.banner.on { display: block; }
 
-@keyframes bannerShimmer {
+@keyframes shimmer {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }
 
-/* ── Toast ──────────────────────────────────────── */
-.toast-container {
+/* ── Players ────────────────────────── */
+
+.players {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+/* ── Toast ──────────────────────────── */
+
+.toasts {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: 20px;
+  right: 20px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   z-index: 100;
 }
 
 .toast {
-  background: rgba(20, 20, 35, 0.9);
+  background: rgba(15,15,25,0.92);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 12px 20px;
-  font-size: 0.85rem;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 0.8rem;
   color: var(--text);
-  backdrop-filter: blur(20px);
-  animation: toastIn 0.3s ease-out, toastOut 0.3s ease-in 2.7s forwards;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  backdrop-filter: blur(12px);
+  animation: tin 0.25s ease-out, tout 0.25s ease-in 2.5s forwards;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.5);
 }
 
-@keyframes toastIn {
-  from { opacity: 0; transform: translateY(12px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes tin {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes toastOut {
-  from { opacity: 1; transform: translateY(0); }
-  to { opacity: 0; transform: translateY(-8px); }
+@keyframes tout {
+  to { opacity: 0; transform: translateY(-6px); }
 }
 
-/* ── Confetti ───────────────────────────────────── */
+/* ── Confetti ───────────────────────── */
+
 .confetti {
   position: fixed;
   top: -10px;
-  border-radius: 3px;
   pointer-events: none;
   z-index: 999;
-  animation: confettiFall linear forwards;
+  animation: fall linear forwards;
 }
 
-@keyframes confettiFall {
+@keyframes fall {
   0% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { top: 105vh; transform: rotate(1080deg); opacity: 0; }
+  85% { opacity: 1; }
+  100% { top: 105vh; transform: rotate(900deg); opacity: 0; }
 }
 
-/* ── Responsive ─────────────────────────────────── */
-@media (max-width: 500px) {
-  .lobby-title { font-size: 2rem; }
-  .grid { gap: 4px; }
-  .cell { font-size: 0.6rem; padding: 3px; border-radius: 8px; }
-  .game-header { flex-direction: column; align-items: stretch; }
-  .game-controls .cat-option { font-size: 0.65rem; padding: 6px 4px; }
+/* ── Responsive ─────────────────────── */
+
+@media (max-width: 480px) {
+  .logo h1 { font-size: 1.7rem; }
+  .grid { gap: 3px; }
+  .c { font-size: 0.55rem; padding: 3px; border-radius: 6px; }
+  .top { flex-direction: column; align-items: stretch; }
 }
 
 .hidden { display: none !important; }
@@ -510,295 +453,230 @@ body::before {
 
   <!-- Lobby -->
   <div class="lobby" id="lobby">
-    <div>
-      <h1 class="lobby-title">Unterrichts-<br>Bingo</h1>
-      <p class="lobby-sub">Multiplayer. Markiert zusammen. Wer hat zuerst Bingo?</p>
+    <div class="logo">
+      <h1>Unterrichts-Bingo</h1>
+      <p>Erstell einen Raum oder tritt einem bei</p>
     </div>
 
-    <div class="lobby-card">
+    <div class="card">
       <h2>Neuen Raum erstellen</h2>
-
-      <div class="input-group">
-        <input class="input-field" id="createName" type="text" placeholder="Dein Name" maxlength="20" autocomplete="off">
+      <div class="fields">
+        <input class="field" id="createName" type="text" placeholder="Dein Name" maxlength="20" autocomplete="off">
       </div>
-
-      <div class="category-select" id="catSelect">
-        <button class="cat-option active" data-cat="alle">Alle</button>
-        <button class="cat-option" data-cat="si">Systemintegration</button>
-        <button class="cat-option" data-cat="wirtschaft">Wirtschaft</button>
+      <div class="cats" id="catPick">
+        <button class="cat on" data-c="alle">Alle</button>
+        <button class="cat" data-c="si">Systemintegration</button>
+        <button class="cat" data-c="wirtschaft">Wirtschaft</button>
+        <button class="cat" data-c="allgemein">Allgemein</button>
       </div>
-
-      <button class="btn btn-primary" id="createBtn">Raum erstellen</button>
+      <button class="btn btn-go" id="createBtn">Raum erstellen</button>
     </div>
 
-    <div class="divider">oder</div>
+    <div class="sep">oder</div>
 
-    <div class="lobby-card">
+    <div class="card">
       <h2>Raum beitreten</h2>
-      <div class="input-group">
-        <input class="input-field" id="joinName" type="text" placeholder="Dein Name" maxlength="20" autocomplete="off">
-        <input class="input-field code-input" id="joinCode" type="text" placeholder="CODE" maxlength="5" autocomplete="off">
+      <div class="fields">
+        <input class="field" id="joinName" type="text" placeholder="Dein Name" maxlength="20" autocomplete="off">
+        <input class="field field-code" id="joinCode" type="text" placeholder="CODE" maxlength="5" autocomplete="off">
       </div>
-      <button class="btn btn-secondary" id="joinBtn">Beitreten</button>
+      <button class="btn btn-dim" id="joinBtn">Beitreten</button>
     </div>
   </div>
 
   <!-- Game -->
   <div class="game" id="game">
-
-    <div class="game-header">
-      <div class="room-badge">
+    <div class="top">
+      <div class="room-info">
         <div>
-          <div class="room-label">Raum</div>
-          <div class="room-code" id="roomCode">—</div>
+          <div class="label">Raum</div>
+          <div class="code" id="roomCode">-</div>
+          <div class="cat-label" id="catLabel"></div>
         </div>
-        <button class="copy-btn" id="copyBtn" title="Code kopieren">&#128203;</button>
+        <button class="copy" id="copyBtn" title="Code kopieren">kopieren</button>
       </div>
-      <div class="players-badge">
-        <div class="player-dot"></div>
-        <span id="playerCount">1 Spieler</span>
+      <div class="online">
+        <div class="dot"></div>
+        <span id="pCount">1 Spieler</span>
       </div>
     </div>
 
-    <div class="game-controls" id="gameCats">
-      <button class="cat-option active" data-cat="alle">Alle</button>
-      <button class="cat-option" data-cat="si">Systemintegration</button>
-      <button class="cat-option" data-cat="wirtschaft">Wirtschaft</button>
-    </div>
+    <button class="btn btn-dim leave-btn" id="leaveBtn">Raum verlassen</button>
 
-    <div class="game-actions">
-      <button class="btn btn-primary" id="newCardBtn" style="flex:1">Neue Karte</button>
-      <button class="btn btn-secondary" id="leaveBtn" style="flex:0 0 auto">Verlassen</button>
-    </div>
-
-    <div class="bingo-banner" id="banner">BINGO!</div>
-
+    <div class="banner" id="banner">BINGO!</div>
     <div class="grid" id="grid"></div>
-
-    <div class="players-badge" style="margin-bottom:12px">
-      <span id="playerList" style="font-size:0.78rem"></span>
-    </div>
+    <div class="players" id="pList"></div>
   </div>
 </div>
 
-<div class="toast-container" id="toasts"></div>
+<div class="toasts" id="toasts"></div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
 const socket = io();
 
-// ── DOM refs ────────────────────────────────────────
-const lobbyEl = document.getElementById('lobby');
-const gameEl = document.getElementById('game');
-const gridEl = document.getElementById('grid');
-const bannerEl = document.getElementById('banner');
-const roomCodeEl = document.getElementById('roomCode');
-const playerCountEl = document.getElementById('playerCount');
-const playerListEl = document.getElementById('playerList');
+const $ = id => document.getElementById(id);
+const lobbyEl = $('lobby');
+const gameEl = $('game');
+const gridEl = $('grid');
+const bannerEl = $('banner');
 
-let currentCategory = 'alle';
-let gameItems = [];
-let markedSet = new Set();
-let bingoActive = false;
+let cat = 'alle';
+let items = [];
+let marked = new Set();
+let hasBingo = false;
 
-// ── Lobby: category select ─────────────────────────
-document.getElementById('catSelect').addEventListener('click', (e) => {
-  const btn = e.target.closest('.cat-option');
-  if (!btn) return;
-  document.querySelectorAll('#catSelect .cat-option').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentCategory = btn.dataset.cat;
+const catNames = {
+  alle: 'Alle Kategorien',
+  si: 'Systemintegration',
+  wirtschaft: 'Wirtschaft',
+  allgemein: 'Allgemein',
+};
+
+// ── Lobby ──────────────────────────────
+$('catPick').addEventListener('click', e => {
+  const b = e.target.closest('.cat');
+  if (!b) return;
+  $('catPick').querySelectorAll('.cat').forEach(x => x.classList.remove('on'));
+  b.classList.add('on');
+  cat = b.dataset.c;
 });
 
-// ── Create room ─────────────────────────────────────
-document.getElementById('createBtn').addEventListener('click', () => {
-  const name = document.getElementById('createName').value.trim() || 'Anon';
-  socket.emit('create-room', { name, category: currentCategory }, (res) => {
+$('createBtn').addEventListener('click', () => {
+  const name = $('createName').value.trim() || 'Anon';
+  socket.emit('create-room', { name, category: cat }, res => {
     if (res.error) return toast(res.error);
-    enterGame(res);
+    enter(res);
   });
 });
 
-// ── Join room ───────────────────────────────────────
-document.getElementById('joinBtn').addEventListener('click', () => {
-  const name = document.getElementById('joinName').value.trim() || 'Anon';
-  const code = document.getElementById('joinCode').value.trim().toUpperCase();
+$('joinBtn').addEventListener('click', () => {
+  const name = $('joinName').value.trim() || 'Anon';
+  const code = $('joinCode').value.trim().toUpperCase();
   if (!code) return toast('Bitte Code eingeben');
-
-  socket.emit('join-room', { name, code }, (res) => {
+  socket.emit('join-room', { name, code }, res => {
     if (res.error) return toast(res.error);
-    enterGame(res);
+    enter(res);
   });
 });
 
-// Enter on code input
-document.getElementById('joinCode').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') document.getElementById('joinBtn').click();
+$('joinCode').addEventListener('keydown', e => {
+  if (e.key === 'Enter') $('joinBtn').click();
 });
 
-// ── Enter game ──────────────────────────────────────
-function enterGame(data) {
+$('createName').addEventListener('keydown', e => {
+  if (e.key === 'Enter') $('createBtn').click();
+});
+
+// ── Enter game ─────────────────────────
+function enter(data) {
   lobbyEl.classList.add('hidden');
-  gameEl.classList.add('active');
-  roomCodeEl.textContent = data.code;
-  gameItems = data.items;
-  markedSet = new Set(data.marked);
-  bingoActive = false;
-  bannerEl.classList.remove('show');
-  renderGrid();
+  gameEl.classList.add('on');
+  $('roomCode').textContent = data.code;
+  $('catLabel').textContent = catNames[data.category] || '';
+  items = data.items;
+  marked = new Set(data.marked);
+  hasBingo = false;
+  bannerEl.classList.remove('on');
+  render();
   updatePlayers(data.players);
-  syncCategoryUI(currentCategory);
 }
 
-// ── Render grid ─────────────────────────────────────
-function renderGrid() {
+// ── Render ─────────────────────────────
+function render() {
   gridEl.innerHTML = '';
   for (let i = 0; i < 25; i++) {
-    const cell = document.createElement('div');
-    cell.classList.add('cell');
-    cell.dataset.index = i;
-
-    if (i === 12) {
-      cell.textContent = 'FREI';
-      cell.classList.add('free', 'marked');
-    } else {
-      const idx = i < 12 ? i : i - 1;
-      cell.textContent = gameItems[idx] || '';
-      if (markedSet.has(i)) cell.classList.add('marked');
-      cell.addEventListener('click', () => {
-        socket.emit('toggle-cell', i);
-      });
-    }
-
-    gridEl.appendChild(cell);
+    const el = document.createElement('div');
+    el.className = 'c';
+    el.textContent = items[i] || '';
+    if (marked.has(i)) el.classList.add('on');
+    el.addEventListener('click', () => socket.emit('toggle-cell', i));
+    gridEl.appendChild(el);
   }
 }
 
-// ── Game category controls ──────────────────────────
-document.getElementById('gameCats').addEventListener('click', (e) => {
-  const btn = e.target.closest('.cat-option');
-  if (!btn) return;
-  document.querySelectorAll('#gameCats .cat-option').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentCategory = btn.dataset.cat;
+// ── Leave ──────────────────────────────
+$('leaveBtn').addEventListener('click', () => location.reload());
+
+// ── Copy ───────────────────────────────
+$('copyBtn').addEventListener('click', () => {
+  navigator.clipboard.writeText($('roomCode').textContent)
+    .then(() => toast('Code kopiert!'))
+    .catch(() => {});
 });
 
-function syncCategoryUI(cat) {
-  document.querySelectorAll('#gameCats .cat-option').forEach(b => {
-    b.classList.toggle('active', b.dataset.cat === cat);
-  });
-  currentCategory = cat;
-}
-
-// ── New card ────────────────────────────────────────
-document.getElementById('newCardBtn').addEventListener('click', () => {
-  socket.emit('new-card', { category: currentCategory });
-});
-
-// ── Leave room ──────────────────────────────────────
-document.getElementById('leaveBtn').addEventListener('click', () => {
-  location.reload();
-});
-
-// ── Copy code ───────────────────────────────────────
-document.getElementById('copyBtn').addEventListener('click', () => {
-  const code = roomCodeEl.textContent;
-  navigator.clipboard.writeText(code).then(() => toast('Code kopiert!')).catch(() => {});
-});
-
-// ── Socket events ───────────────────────────────────
-socket.on('cell-toggled', ({ index, marked, by }) => {
-  if (marked) {
-    markedSet.add(index);
+// ── Socket ─────────────────────────────
+socket.on('cell-toggled', ({ index, marked: isMarked, by }) => {
+  if (isMarked) {
+    marked.add(index);
   } else {
-    markedSet.delete(index);
-    // Clear bingo state when unmarking
-    bingoActive = false;
-    bannerEl.classList.remove('show');
-    document.querySelectorAll('.cell.bingo-cell').forEach(c => c.classList.remove('bingo-cell'));
+    marked.delete(index);
+    hasBingo = false;
+    bannerEl.classList.remove('on');
+    gridEl.querySelectorAll('.bingo').forEach(c => c.classList.remove('bingo'));
   }
 
   const cell = gridEl.children[index];
   if (!cell) return;
+  cell.classList.toggle('on', isMarked);
 
-  cell.classList.toggle('marked', marked);
+  const old = cell.querySelector('.who');
+  if (old) old.remove();
 
-  // Remove old marker name
-  const oldMarker = cell.querySelector('.marker-name');
-  if (oldMarker) oldMarker.remove();
-
-  if (marked && by) {
+  if (isMarked && by) {
     const tag = document.createElement('span');
-    tag.className = 'marker-name';
+    tag.className = 'who';
     tag.textContent = by;
     cell.appendChild(tag);
   }
 });
 
 socket.on('bingo', ({ cells, by }) => {
-  if (!bingoActive) {
-    bingoActive = true;
-    bannerEl.classList.add('show');
-    spawnConfetti();
-    toast(`BINGO! ${by} hat die Reihe komplettiert!`);
+  if (!hasBingo) {
+    hasBingo = true;
+    bannerEl.classList.add('on');
+    confetti();
+    toast('BINGO! ' + by + ' hat die Reihe komplettiert!');
   }
   cells.forEach(i => {
     const cell = gridEl.children[i];
-    if (cell) cell.classList.add('bingo-cell');
+    if (cell) cell.classList.add('bingo');
   });
 });
 
-socket.on('new-card', ({ items, marked, category }) => {
-  gameItems = items;
-  markedSet = new Set(marked);
-  bingoActive = false;
-  bannerEl.classList.remove('show');
-  syncCategoryUI(category);
-  renderGrid();
-  toast('Neue Karte!');
-});
+socket.on('players-update', updatePlayers);
+socket.on('player-joined', name => toast(name + ' ist beigetreten'));
+socket.on('player-left', name => toast(name + ' hat den Raum verlassen'));
 
-socket.on('players-update', (players) => {
-  updatePlayers(players);
-});
-
-socket.on('player-joined', (name) => {
-  toast(`${name} ist beigetreten`);
-});
-
-socket.on('player-left', (name) => {
-  toast(`${name} hat den Raum verlassen`);
-});
-
-// ── Helpers ─────────────────────────────────────────
+// ── Helpers ────────────────────────────
 function updatePlayers(players) {
-  playerCountEl.textContent = `${players.length} Spieler`;
-  playerListEl.textContent = players.join(', ');
+  $('pCount').textContent = players.length + ' Spieler';
+  $('pList').textContent = players.join(', ');
 }
 
 function toast(msg) {
-  const container = document.getElementById('toasts');
   const el = document.createElement('div');
   el.className = 'toast';
   el.textContent = msg;
-  container.appendChild(el);
-  setTimeout(() => el.remove(), 3200);
+  $('toasts').appendChild(el);
+  setTimeout(() => el.remove(), 3000);
 }
 
-function spawnConfetti() {
-  const colors = ['#a855f7', '#06b6d4', '#f59e0b', '#10b981', '#ef4444', '#ec4899', '#fff'];
-  for (let i = 0; i < 100; i++) {
+function confetti() {
+  const colors = ['#22c55e', '#a855f7', '#06b6d4', '#f59e0b', '#ef4444', '#ec4899'];
+  for (let i = 0; i < 80; i++) {
     const el = document.createElement('div');
-    el.classList.add('confetti');
+    el.className = 'confetti';
     el.style.left = Math.random() * 100 + 'vw';
     el.style.background = colors[Math.floor(Math.random() * colors.length)];
-    el.style.animationDuration = (2.5 + Math.random() * 3) + 's';
+    el.style.animationDuration = (2 + Math.random() * 3) + 's';
     el.style.animationDelay = Math.random() * 1.5 + 's';
-    el.style.width = (5 + Math.random() * 10) + 'px';
-    el.style.height = (5 + Math.random() * 10) + 'px';
+    const s = 5 + Math.random() * 8;
+    el.style.width = s + 'px';
+    el.style.height = s + 'px';
     el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
     document.body.appendChild(el);
-    setTimeout(() => el.remove(), 7000);
+    setTimeout(() => el.remove(), 6000);
   }
 }
 </script>

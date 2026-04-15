@@ -11,7 +11,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // ── Bingo items ──────────────────────────────────────────────
 
-// "allgemein" items are always mixed into every category
 const allgemein = [
   "Lehrer kommt zu spät", "Jemand schläft", "Handy klingelt", "Kann ich aufs Klo?",
   "Jemand isst heimlich", "Stille wenn Lehrer Frage stellt", "Einer redet die ganze Zeit",
@@ -32,7 +31,6 @@ const allgemein = [
 
 const items = {
   si: [
-    // Technik / Systemintegration
     "Drucker geht nicht", "Haben Sie neu gestartet?", "WLAN fällt aus",
     "Admin-Passwort vergessen", "Windows Update im Unterricht", "Beamer funktioniert nicht",
     "Jemand googelt die Antwort", "Linux vs Windows Debatte", "Ping auf 8.8.8.8",
@@ -49,7 +47,6 @@ const items = {
     "PC braucht 10 Min zum Hochfahren", "Treiber fehlt", "Jemand baut am falschen PC",
     "Cloud = Computer von jemand anderem", "Jemand verwechselt RAM und ROM",
     "Jemand öffnet 50 Chrome Tabs",
-    // Ausbildung / Betrieb
     "Im Betrieb ist das anders", "Das braucht ihr für die Prüfung",
     "Berichtsheft nicht geschrieben", "Jemand war gestern krank (sicher)",
     "Ausbilder wird zitiert", "Prüfungsangst-Gespräch", "Überstunden-Diskussion",
@@ -79,6 +76,7 @@ const items = {
     "EZB wird erwähnt", "Buchungssatz hat 5 Zeilen", "Was ist nochmal eine GmbH?",
     "Lehrer redet über Aktien", "Gewinn vs Umsatz Unterschied",
   ],
+  allgemein,
 };
 
 function shuffle(arr) {
@@ -101,6 +99,9 @@ function getPool(category) {
   if (category === 'alle') {
     return [...items.si, ...items.wirtschaft, ...allgemein];
   }
+  if (category === 'allgemein') {
+    return [...allgemein];
+  }
   return [...(items[category] || []), ...allgemein];
 }
 
@@ -112,12 +113,12 @@ function createRoom(category) {
   let code;
   do { code = generateCode(); } while (rooms.has(code));
 
-  const pool = shuffle(getPool(category)).slice(0, 24);
+  const pool = shuffle(getPool(category)).slice(0, 25);
   const room = {
     code,
     category,
     items: pool,
-    marked: new Set([12]), // free space
+    marked: new Set(),
     players: new Map(),
     createdAt: Date.now(),
   };
@@ -127,7 +128,7 @@ function createRoom(category) {
 
 // Clean up stale rooms every 30 min
 setInterval(() => {
-  const cutoff = Date.now() - 3 * 60 * 60 * 1000; // 3h
+  const cutoff = Date.now() - 3 * 60 * 60 * 1000;
   for (const [code, room] of rooms) {
     if (room.createdAt < cutoff) rooms.delete(code);
   }
@@ -151,6 +152,7 @@ io.on('connection', (socket) => {
       items: room.items,
       marked: [...room.marked],
       players: [...room.players.values()],
+      category: room.category,
     });
 
     io.to(room.code).emit('players-update', [...room.players.values()]);
@@ -170,6 +172,7 @@ io.on('connection', (socket) => {
       items: room.items,
       marked: [...room.marked],
       players: [...room.players.values()],
+      category: room.category,
     });
 
     io.to(room.code).emit('players-update', [...room.players.values()]);
@@ -179,7 +182,7 @@ io.on('connection', (socket) => {
   socket.on('toggle-cell', (index) => {
     if (!currentRoom) return;
     const room = rooms.get(currentRoom);
-    if (!room || index === 12) return;
+    if (!room || index < 0 || index > 24) return;
 
     if (room.marked.has(index)) {
       room.marked.delete(index);
@@ -193,7 +196,6 @@ io.on('connection', (socket) => {
       by: playerName,
     });
 
-    // Check bingo server-side
     const lines = [
       [0,1,2,3,4],[5,6,7,8,9],[10,11,12,13,14],[15,16,17,18,19],[20,21,22,23,24],
       [0,5,10,15,20],[1,6,11,16,21],[2,7,12,17,22],[3,8,13,18,23],[4,9,14,19,24],
@@ -204,23 +206,6 @@ io.on('connection', (socket) => {
       const bingoCells = new Set(bingoLines.flat());
       io.to(room.code).emit('bingo', { cells: [...bingoCells], by: playerName });
     }
-  });
-
-  socket.on('new-card', ({ category }) => {
-    if (!currentRoom) return;
-    const room = rooms.get(currentRoom);
-    if (!room) return;
-
-    const pool = shuffle(getPool(category || room.category)).slice(0, 24);
-    room.items = pool;
-    room.marked = new Set([12]);
-    room.category = category || room.category;
-
-    io.to(room.code).emit('new-card', {
-      items: room.items,
-      marked: [...room.marked],
-      category: room.category,
-    });
   });
 
   socket.on('disconnect', () => {
